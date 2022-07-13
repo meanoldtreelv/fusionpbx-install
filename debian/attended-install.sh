@@ -107,8 +107,9 @@ read -p "IPTables installation complete, check output for any errors."
 clear
 
 #sngrep
-resources/sngrep.sh
-
+apt-get install -y sngrep
+read -p "sngrep installation complete, check output for any errors."
+clear
 
 #FusionPBX
 resources/fusionpbx.sh
