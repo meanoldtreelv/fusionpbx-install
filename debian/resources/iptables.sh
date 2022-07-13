@@ -1,33 +1,14 @@
 #!/bin/sh
 
-#move to script directory so all relative paths work
-cd "$(dirname "$0")"
-
-
-#add the includes
-. ./config.sh
-. ./colors.sh
-. ./environment.sh
-
 #send a message
 verbose "Configuring IPTables"
 
 #defaults to nftables by default this enables iptables
-if [ ."$os_codename" = ."buster" ]; then
-	update-alternatives --set iptables /usr/sbin/iptables-legacy
-	update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
-fi
-if [ ."$os_codename" = ."bullseye" ]; then
-	apt-get install -y iptables
-	update-alternatives --set iptables /usr/sbin/iptables-legacy
-	update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
-fi
+apt-get install -y iptables
+update-alternatives --set iptables /usr/sbin/iptables-legacy
+update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
 
-#remove ufw
-ufw reset
-ufw disable
-apt-get remove -y ufw
-#apt-get purge ufw
+
 
 #run iptables commands
 iptables -A INPUT -i lo -j ACCEPT
@@ -53,6 +34,15 @@ iptables -A INPUT -p tcp --dport 7443 -j ACCEPT
 iptables -A INPUT -p tcp --dport 5060:5091 -j ACCEPT
 iptables -A INPUT -p udp --dport 5060:5091 -j ACCEPT
 iptables -A INPUT -p udp --dport 16384:32768 -j ACCEPT
+# Adding docker input chain rules
+iptables -A INPUT -p tcp --dport 2377 -j ACCEPT
+iptables -A INPUT -p tcp --dport 7946 -j ACCEPT
+iptables -A INPUT -p tcp --dport 8000 -j ACCEPT
+iptables -A INPUT -p tcp --dport 9000 -j ACCEPT
+iptables -A INPUT -p tcp --dport 9443 -j ACCEPT
+iptables -A INPUT -p tcp --dport 7946 -j ACCEPT
+iptables -A INPUT -p udp --dport 7946 -j ACCEPT
+#end docker rules
 iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 iptables -A INPUT -p udp --dport 1194 -j ACCEPT
 iptables -t mangle -A OUTPUT -p udp -m udp --sport 16384:32768 -j DSCP --set-dscp 46
