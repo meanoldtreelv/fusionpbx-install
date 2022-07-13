@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# pinning the current working directory so we can hop back to it when needed
+CWD=$(pwd)
+
 #upgrade the packages
 apt-get update && apt-get upgrade -y
 
@@ -216,7 +219,118 @@ service nginx restart
 read -p "web server configured, check for errors."
 
 #FreeSWITCH
-resources/switch.sh
+
+verbose " beginning source install of FreeSWITCH"
+
+# apt dependency installation
+apt install -y autoconf automake devscripts g++ git-core libncurses5-dev libtool make libjpeg-dev
+apt install -y pkg-config flac  libgdbm-dev libdb-dev gettext sudo equivs mlocate git dpkg-dev libpq-dev
+apt install -y liblua5.2-dev libtiff5-dev libperl-dev libcurl4-openssl-dev libsqlite3-dev libpcre3-dev
+apt install -y devscripts libspeexdsp-dev libspeex-dev libldns-dev libedit-dev libopus-dev libmemcached-dev
+apt install -y libshout3-dev libmpg123-dev libmp3lame-dev yasm nasm libsndfile1-dev libuv1-dev libvpx-dev
+apt install -y libvpx6 swig4.0
+apt install -y sqlite3
+apt install -y cmake uuid-dev
+
+read -p "check the logs and make sure that nothing had issues installing"
+clear
+
+# Start of the source builds, lots of checks here
+
+verbose "building libks"
+# libks
+cd /usr/src
+git clone https://github.com/signalwire/libks.git libks
+cd libks
+cmake .
+make
+make install
+# libks C includes
+export C_INCLUDE_PATH=/usr/include/libks
+
+read -p "libks installed, check for build errors."
+clear
+
+verbose "building Sofia"
+# sofia-sip
+cd /usr/src
+#git clone https://github.com/freeswitch/sofia-sip.git sofia-sip
+wget https://github.com/freeswitch/sofia-sip/archive/refs/tags/v$sofia_version.zip
+unzip v$sofia_version.zip
+rm -R sofia-sip
+mv sofia-sip-$sofia_version sofia-sip
+cd sofia-sip
+sh autogen.sh
+./configure
+make
+make install
+
+read -p "Sofia installed, check for build errors."
+clear
+
+verbose "building SpanDSP"
+# spandsp
+cd /usr/src
+git clone https://github.com/freeswitch/spandsp.git spandsp
+cd spandsp
+sh autogen.sh
+./configure
+make
+make install
+ldconfig
+
+read -p "SpanDSP installed, check for build errors."
+clear
+
+echo "Using FreeSWITCH version $switch_version"
+cd /usr/src
+wget http://files.freeswitch.org/freeswitch-releases/freeswitch-$switch_version.-release.zip
+unzip freeswitch-$switch_version.-release.zip
+rm -R freeswitch
+mv freeswitch-$switch_version.-release freeswitch
+cd /usr/src/freeswitch
+
+
+#apply patch
+patch -u /usr/src/freeswitch/src/mod/databases/mod_pgsql/mod_pgsql.c -i /usr/src/fusionpbx-install.sh/debian/resources/switch/source/mod_pgsql.patch
+
+
+# enable required modules
+sed -i /usr/src/freeswitch/modules.conf -e s:'#applications/mod_av:formats/mod_av:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#applications/mod_callcenter:applications/mod_callcenter:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#applications/mod_cidlookup:applications/mod_cidlookup:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#applications/mod_memcache:applications/mod_memcache:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#applications/mod_nibblebill:applications/mod_nibblebill:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#applications/mod_curl:applications/mod_curl:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#formats/mod_shout:formats/mod_shout:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#formats/mod_pgsql:formats/mod_pgsql:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#say/mod_say_es:say/mod_say_es:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'#say/mod_say_fr:say/mod_say_fr:'
+
+#disable module or install dependency libks to compile signalwire
+sed -i /usr/src/freeswitch/modules.conf -e s:'applications/mod_signalwire:#applications/mod_signalwire:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'endpoints/mod_skinny:#endpoints/mod_skinny:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'endpoints/mod_verto:#endpoints/mod_verto:'
+
+# prepare the build
+./configure -C --enable-portable-binary --disable-dependency-tracking --prefix=/usr --localstatedir=/var --sysconfdir=/etc --with-openssl --enable-core-pgsql-support
+
+# compile and install
+make
+make install
+make sounds-install moh-install
+make hd-sounds-install hd-moh-install
+make cd-sounds-install cd-moh-install
+
+#move the music into music/default directory
+mkdir -p /usr/share/freeswitch/sounds/music/default
+mv /usr/share/freeswitch/sounds/music/*000 /usr/share/freeswitch/sounds/music/default
+
+read -p "FreeSWITCH installation completem check for errors."
+
+#return to the executing directory
+cd $CWD
+clear
 
 #Fail2ban
 resources/fail2ban.sh
