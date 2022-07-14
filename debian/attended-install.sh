@@ -42,6 +42,9 @@ apt-get install -y snmpd
 echo "rocommunity public" > /etc/snmp/snmpd.conf
 service snmpd restart
 
+#set the ip address
+server_address=$(hostname -I)
+
 read -p "Prerequisites installed, press [Enter] to proceed with installation."
 clear
 
@@ -357,10 +360,31 @@ read -p "Fail2ban installed, check for errors."
 clear 
 
 #Postgres
-resources/postgresql.sh
+#installing postgresql client
+apt-get install -y sudo postgresql-client
 
-#set the ip address
-server_address=$(hostname -I)
+
+cwd=$(pwd)
+
+
+if [ ."$database_cluster_init" = ."true" ] ; then
+	#move to /tmp to prevent a red herring error when running sudo with psql
+	cd /tmp
+	# add the databases, users and grant permissions to them
+	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "CREATE DATABASE fusionpbx;";
+	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "CREATE DATABASE freeswitch;";
+	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "CREATE ROLE fusionpbx WITH SUPERUSER LOGIN PASSWORD '$password';"
+	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "CREATE ROLE freeswitch WITH SUPERUSER LOGIN PASSWORD '$password';"
+	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE fusionpbx to fusionpbx;"
+	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE freeswitch to fusionpbx;"
+	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE freeswitch to freeswitch;"
+	read -p "database initialized, check for errors"
+	# jump back to script directory
+	cd $CWD
+fi
+
+read -p "Postgres setup complete, check for additional errors"
+clear
 
 #add the database schema, user and groups
 resources/finish.sh
