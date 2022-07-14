@@ -4,7 +4,7 @@
 apt-get update && apt-get upgrade -y
 
 #install some base packages
-apt-get install -y git lsb-release 
+apt-get install -y git lsb-release
 
 #lets get docker installed
 echo "installing Docker and joining to swarm"
@@ -12,8 +12,8 @@ echo "installing Docker and joining to swarm"
 #install the docker apt repo
 apt-get install ca-certificates curl gnupg
 mkdir -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 #install docker packages
 apt-get update
@@ -396,20 +396,22 @@ if [ .$database_password = .'random' ]; then
 	database_password=$(dd if=/dev/urandom bs=1 count=20 2>/dev/null | base64 | sed 's/[=\+//]//g')
 fi
 
-cwd=$(pwd)
+
 
 
 if [ ."$database_cluster_init" = ."true" ] ; then
+	# set the main postgres password
+	export PGPASSWORD=adminpassword
 	#move to /tmp to prevent a red herring error when running sudo with psql
 	cd /tmp
 	# add the databases, users and grant permissions to them
-	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "CREATE DATABASE fusionpbx;";
-	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "CREATE DATABASE freeswitch;";
-	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "CREATE ROLE fusionpbx WITH SUPERUSER LOGIN PASSWORD '$database_password';"
-	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "CREATE ROLE freeswitch WITH SUPERUSER LOGIN PASSWORD '$database_password';"
-	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE fusionpbx to fusionpbx;"
-	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE freeswitch to fusionpbx;"
-	psql -U postgres -W $(database_postgres_password) -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE freeswitch to freeswitch;"
+	psql -U postgres -h 127.0.0.1 -e -c "CREATE DATABASE fusionpbx;";
+	psql -U postgres -h 127.0.0.1 -e -c "CREATE DATABASE freeswitch;";
+	psql -U postgres -h 127.0.0.1 -e -c "CREATE ROLE fusionpbx WITH SUPERUSER LOGIN PASSWORD '$database_password';"
+	psql -U postgres -h 127.0.0.1 -e -c "CREATE ROLE freeswitch WITH SUPERUSER LOGIN PASSWORD '$database_password';"
+	psql -U postgres -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE fusionpbx to fusionpbx;"
+	psql -U postgres -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE freeswitch to fusionpbx;"
+	psql -U postgres -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE freeswitch to freeswitch;"
 	read -p "database initialized, check for errors"
 	#add the database schema
 	cd /var/www/fusionpbx && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php > /dev/null 2>&1
