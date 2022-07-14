@@ -3,6 +3,9 @@
 #upgrade the packages
 apt-get update && apt-get upgrade -y
 
+#clean up previous install attempts
+rm -rf /usr/src/fusionpbx-install
+
 #install some base packages
 apt-get install -y git lsb-release
 
@@ -15,6 +18,9 @@ mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
+read -p "check to see if docker repo was installed correctly"
+
+
 #install docker packages
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
@@ -26,7 +32,8 @@ docker swarm join --token SWMTKN-1-5w4ekdzj9gkwf0i302z5rw8iyycxwk224yif3cedx0p0i
 echo "getting the rest of the FusionPBX install package"
 
 #get the install script
-cd /usr/src && git clone https://github.com/meanoldtreelv/fusionpbx-install.git
+cd /usr/src 
+git clone https://github.com/meanoldtreelv/fusionpbx-install.git
 
 #change the working directory
 cd /usr/src/fusionpbx-install
@@ -35,9 +42,9 @@ cd /usr/src/fusionpbx-install
 CWD=$(pwd)
 
 #includes
-. ./resources/config.sh
-. ./resources/colors.sh
-. ./resources/environment.sh
+. ./config.sh
+. ./colors.sh
+. ./environment.sh
 
 # removes the cd img from the /etc/apt/sources.list file (not needed after base install)
 sed -i '/cdrom:/d' /etc/apt/sources.list
@@ -255,7 +262,7 @@ echo " beginning source install of FreeSWITCH"
 
 # apt dependency installation
 apt install -y autoconf automake devscripts g++ git-core libncurses5-dev libtool make libjpeg-dev
-apt install -y pkg-config flac  libgdbm-dev libdb-dev gettext sudo equivs mlocate git dpkg-dev libpq-dev
+apt install -y pkg-config flac  libgdbm-dev libdb-dev gettext equivs mlocate git dpkg-dev libpq-dev
 apt install -y liblua5.2-dev libtiff5-dev libperl-dev libcurl4-openssl-dev libsqlite3-dev libpcre3-dev
 apt install -y devscripts libspeexdsp-dev libspeex-dev libldns-dev libedit-dev libopus-dev libmemcached-dev
 apt install -y libshout3-dev libmpg123-dev libmp3lame-dev yasm nasm libsndfile1-dev libuv1-dev libvpx-dev
@@ -389,7 +396,7 @@ clear
 
 #Postgres
 #installing postgresql client
-apt-get install -y sudo postgresql-client
+apt-get install -y postgresql-client
 
 #create random passwords if flag is set
 if [ .$database_password = .'random' ]; then
