@@ -7,18 +7,18 @@ apt-get update && apt-get upgrade -y
 rm -rf /usr/src/fusionpbx-install
 
 #install some base packages
-apt-get install -y git lsb-release curl gpg
+apt-get install -y git lsb-release
 
 #lets get docker installed
 echo "installing Docker and joining to swarm"
 
 #install the docker apt repo
-apt-get install ca-certificates curl gnupg
+apt-get install -y ca-certificates curl gnupg
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-read -p "check to see if docker repo was installed correctly"
+read -r -n 1 -s -p "check to see if docker repo was installed correctly"
 
 
 #install docker packages
@@ -80,7 +80,7 @@ fi
 
 
 
-read -p "Prerequisites installed, press [Enter] to proceed with installation."
+read -r -n 1 -s -p "Prerequisites installed, press [Enter] to proceed with installation."
 clear
 
 #IPTables
@@ -144,12 +144,12 @@ echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
 apt-get install -y iptables-persistent
 
-read -p "IPTables installation complete, check output for any errors."
+read -r -n 1 -s -p "IPTables installation complete, check output for any errors."
 clear
 
 #sngrep
 apt-get install -y sngrep
-read -p "sngrep installation complete, check output for any errors."
+read -r -n 1 -s -p "sngrep installation complete, check output for any errors."
 clear
 
 #FusionPBX
@@ -161,7 +161,7 @@ apt-get install -y vim git dbus haveged ssl-cert qrencode
 apt-get install -y ghostscript libtiff5-dev libtiff-tools at
 
 #pause to verify installation
-read -p "FusionPBX dependencies installed, check for errors."
+read -r -n 1 -s -p "FusionPBX dependencies installed, check for errors."
 
 #get the branch
 if [ .$system_branch = .'master' ]; then
@@ -221,7 +221,7 @@ service php7.4-fpm restart
 systemctl daemon-reload
 systemctl restart php7.4-fpm
 
-read -p "PHP installation complete, check for errors."
+read -r -n 1 -s -p "PHP installation complete, check for errors."
 
 #NGINX web server
 #send a message
@@ -254,7 +254,7 @@ systemctl daemon-reload
 #restart nginx
 service nginx restart
 
-read -p "web server configured, check for errors."
+read -r -n 1 -s -p "web server configured, check for errors."
 
 #FreeSWITCH
 
@@ -270,7 +270,7 @@ apt install -y libvpx6 swig4.0
 apt install -y sqlite3
 apt install -y cmake uuid-dev
 
-read -p "check the logs and make sure that nothing had issues installing"
+read -r -n 1 -s -p "check the logs and make sure that nothing had issues installing"
 clear
 
 # Start of the source builds, lots of checks here
@@ -286,7 +286,7 @@ make install
 # libks C includes
 export C_INCLUDE_PATH=/usr/include/libks
 
-read -p "libks installed, check for build errors."
+read -r -n 1 -s -p "libks installed, check for build errors."
 clear
 
 echo "building Sofia"
@@ -303,7 +303,7 @@ sh autogen.sh
 make
 make install
 
-read -p "Sofia installed, check for build errors."
+read -r -n 1 -s -p "Sofia installed, check for build errors."
 clear
 
 echo "building SpanDSP"
@@ -317,7 +317,7 @@ make
 make install
 ldconfig
 
-read -p "SpanDSP installed, check for build errors."
+read -r -n 1 -s -p "SpanDSP installed, check for build errors."
 clear
 
 echo "Using FreeSWITCH version $switch_version"
@@ -364,7 +364,7 @@ make cd-sounds-install cd-moh-install
 mkdir -p /usr/share/freeswitch/sounds/music/default
 mv /usr/share/freeswitch/sounds/music/*000 /usr/share/freeswitch/sounds/music/default
 
-read -p "FreeSWITCH installation completem check for errors."
+read -r -n 1 -s -p "FreeSWITCH installation completem check for errors."
 
 #return to the executing directory
 cd $CWD
@@ -391,7 +391,7 @@ cp fail2ban/jail.local /etc/fail2ban/jail.local
 #restart fail2ban
 /usr/sbin/service fail2ban restart
 
-read -p "Fail2ban installed, check for errors."
+read -r -n 1 -s -p "Fail2ban installed, check for errors."
 clear 
 
 #Postgres
@@ -419,7 +419,7 @@ if [ ."$database_cluster_init" = ."true" ] ; then
 	psql -U postgres -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE fusionpbx to fusionpbx;"
 	psql -U postgres -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE freeswitch to fusionpbx;"
 	psql -U postgres -h 127.0.0.1 -e -c "GRANT ALL PRIVILEGES ON DATABASE freeswitch to freeswitch;"
-	read -p "database initialized, check for errors"
+	read -r -n 1 -s -p "database initialized, check for errors"
 	#add the database schema
 	cd /var/www/fusionpbx && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php > /dev/null 2>&1
 	#set the default postgres password
@@ -428,7 +428,7 @@ if [ ."$database_cluster_init" = ."true" ] ; then
 	cd $CWD
 fi
 
-read -p "Postgres setup complete, check for additional errors"
+read -r -n 1 -s -p "Postgres setup complete, check for additional errors"
 clear
 
 echo "time to set some more variables"
