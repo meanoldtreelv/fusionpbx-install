@@ -29,7 +29,6 @@ apt-get update && apt-get upgrade -y
 
 #Add dependencies
 apt-get install -y wget
-apt-get install -y lsb-release
 apt-get install -y systemd
 apt-get install -y systemd-sysv
 apt-get install -y ca-certificates
