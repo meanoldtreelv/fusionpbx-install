@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# pinning the current working directory so we can hop back to it when needed
-CWD=$(pwd)
-
 #upgrade the packages
 apt-get update && apt-get upgrade -y
 
@@ -10,10 +7,13 @@ apt-get update && apt-get upgrade -y
 apt-get install -y git lsb-release
 
 #get the install script
-cd /usr/src && git clone https://github.com/meanoldtreelv/fusionpbx-install.sh.git
+cd /usr/src && git clone https://github.com/meanoldtreelv/fusionpbx-install.git
 
 #change the working directory
-cd /usr/src/fusionpbx-install.sh/debian
+cd /usr/src/fusionpbx-install
+
+# pinning the current working directory so we can hop back to it when needed
+CWD=$(pwd)
 
 #includes
 . ./resources/config.sh
