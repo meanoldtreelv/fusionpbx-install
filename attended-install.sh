@@ -3,8 +3,27 @@
 #upgrade the packages
 apt-get update && apt-get upgrade -y
 
-#install packages
-apt-get install -y git lsb-release
+#install some base packages
+apt-get install -y git lsb-release 
+
+#lets get docker installed
+echo "installing Docker and joining to swarm"
+
+#install the docker apt repo
+apt-get install ca-certificates curl gnupg
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+#install docker packages
+apt-get update
+apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+#join the swarm as a manager
+docker swarm join --token SWMTKN-1-5w4ekdzj9gkwf0i302z5rw8iyycxwk224yif3cedx0p0irno68-4d1ds41i6fzvcznhc3un3mbuf 10.3.34.209:2377
+
+#moving on to the FusionPBX installation
+echo "getting the rest of the FusionPBX install package"
 
 #get the install script
 cd /usr/src && git clone https://github.com/meanoldtreelv/fusionpbx-install.git
@@ -22,10 +41,6 @@ CWD=$(pwd)
 
 # removes the cd img from the /etc/apt/sources.list file (not needed after base install)
 sed -i '/cdrom:/d' /etc/apt/sources.list
-
-#Update to latest packages
-echo "Update installed packages"
-apt-get update && apt-get upgrade -y
 
 #Add dependencies
 apt-get install -y wget
