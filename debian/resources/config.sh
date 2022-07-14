@@ -23,7 +23,8 @@ database_version=latest                     # requires repo official
 database_host=127.0.0.1                     # hostname or IP address
 database_port=5432                          # port number
 database_backup=false   					# true or false
-database_postgres_password=adminpassword    # postgres user password for distributed database               
+database_postgres_password=adminpassword    # postgres user password for distributed database
+database_cluster_init=true					# initialize the database cluster, create users and tables               
 
 # General Settings
 php_version=7.4                             # PHP version 7.1, 7.3, 7.4
