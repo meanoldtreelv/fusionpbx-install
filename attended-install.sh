@@ -7,7 +7,7 @@ apt-get update && apt-get upgrade -y
 rm -rf /usr/src/fusionpbx-install
 
 #install some base packages
-apt-get install -y git lsb-release
+apt-get install -y git lsb-release curl gpg
 
 #lets get docker installed
 echo "installing Docker and joining to swarm"
