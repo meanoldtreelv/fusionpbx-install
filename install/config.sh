@@ -29,3 +29,7 @@ database_cluster_init=false					# initialize the database cluster, create users 
 # General Settings
 php_version=7.4                             # PHP version 7.1, 7.3, 7.4
 letsencrypt_folder=true                     # true or false
+
+#relocated settings
+server_address=$(hostname -I)
+domain_name=$(hostname -I | cut -d ' ' -f1)
