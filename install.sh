@@ -7,7 +7,7 @@ rm -rf /usr/src/fusionpbx-install
 #grab the base packages
 apt-get update
 apt-get upgrade
-apt-get install -y git lsb-release wget nano
+apt-get install -y git lsb-release nano
 # cloning the repo so that we have things on disk
 cd /usr/src
 git clone https://github.com/meanoldtreelv/fusionpbx-install.git
