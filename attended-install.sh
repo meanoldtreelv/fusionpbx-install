@@ -1,5 +1,9 @@
 #!/bin/sh
 
+echo "script is currently disabled pending re-factor, docker init issue"
+
+exit
+
 #upgrade the packages
 apt-get update && apt-get upgrade -y
 
