@@ -3,11 +3,16 @@
 
 echo "Node Build Menu"
 PS3='Please enter your choice: '
-options=("Edit config" "Docker Install & Join" "Option 2" "Option 3" "Quit")
+options=("test read" "Edit config" "Docker Install & Join" "Option 2" "Option 3" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
-        "Edit config")
+        "test read")
+			clear
+			read -s -p "Press any key to resume ..."
+			clear
+			;;
+		"Edit config")
             clear
 			nano /usr/src/fusionpbx-install/install/config.sh
             clear
