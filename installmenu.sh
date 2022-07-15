@@ -8,11 +8,22 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Edit config")
-            nano /usr/src/fusionpbx-install/install/config.sh
-            ;;
+            clear
+			nano /usr/src/fusionpbx-install/install/config.sh
+            clear
+			;;
 		"Install All Dependencies")
-            . ./install/dependencies.sh
-            ;;
+            clear
+			. ./install/dependencies.sh
+            clear
+			. ./install/dependencies.sh
+			echo ""
+			echo ""
+			echo "Check apt-get output for any installation errors"
+			echo ""
+			echo ""
+			read -s -p "Press any key to resume ..."
+			;;
 		"Docker Install & Join")
             . ./install/docker-install.sh
             ;;
