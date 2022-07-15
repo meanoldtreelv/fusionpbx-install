@@ -1,0 +1,7 @@
+CREATE DATABASE fusionpbx;
+CREATE DATABASE freeswitch;
+CREATE ROLE fusionpbx WITH SUPERUSER LOGIN PASSWORD adminpassword;
+CREATE ROLE freeswitch WITH SUPERUSER LOGIN PASSWORD adminpassword;
+GRANT ALL PRIVILEGES ON DATABASE fusionpbx to fusionpbx;
+GRANT ALL PRIVILEGES ON DATABASE freeswitch to fusionpbx;
+GRANT ALL PRIVILEGES ON DATABASE freeswitch to freeswitch;
