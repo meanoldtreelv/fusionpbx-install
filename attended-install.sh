@@ -4,6 +4,20 @@ echo "script is currently disabled pending re-factor, docker init issue"
 
 exit
 
+# Refactor planning
+#- move all apt installation candidates into a single string to clean up duplicate apt calls
+#- move variables set by color.sh and environment.sh into config.sh
+#- clean up directory to remove /debian entirely
+
+
+
+
+
+
+
+
+
+
 #upgrade the packages
 apt-get update && apt-get upgrade -y
 
@@ -27,7 +41,7 @@ read -r -n 1 -s -p "check to see if docker repo was installed correctly"
 
 #install docker packages
 apt-get update
-apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 #join the swarm as a manager
 docker swarm join --token SWMTKN-1-5w4ekdzj9gkwf0i302z5rw8iyycxwk224yif3cedx0p0irno68-4d1ds41i6fzvcznhc3un3mbuf 10.3.34.209:2377
