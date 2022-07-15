@@ -1,27 +1,23 @@
 #!/bin/bash
 
 
+cd /usr/src/fusionpbx-install/
+clear
 echo "Node Build Menu"
 PS3='Please enter your choice: '
-options=("test read" "Edit config" "Docker Install & Join" "Option 2" "Option 3" "Quit")
+options=("Edit config" "Docker Install & Join" "Install IPTables" "Option 3" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
-        "test read")
-			clear
-			read -s -p "Press any key to resume ..."
-			clear
-			;;
 		"Edit config")
             clear
 			nano /usr/src/fusionpbx-install/install/config.sh
-            clear
 			;;
 		"Install All Dependencies")
             clear
-			. ./install/dependencies.sh
+			bash ./install/dependencies.sh
             clear
-			. ./install/dependencies.sh
+			bash ./install/dependencies.sh
 			echo ""
 			echo ""
 			echo "Check apt-get output for any installation errors"
@@ -30,13 +26,32 @@ do
 			read -s -p "Press any key to resume ..."
 			;;
 		"Docker Install & Join")
-            . ./install/docker-install.sh
+			clear
+            bash ./install/docker-install.sh
+			echo "iptables installation complete"
+			read -s -p "Press any key to resume ..."
             ;;
-        "Option 2")
-            echo "you chose choice 2"
+        "Install IPTables")
+            clear
+			bash ./install/iptables.sh
+			echo "iptables installation complete"
+			read -s -p "Press any key to resume ..."
             ;;
-        "Option 3")
-            echo "you chose choice $REPLY which is $opt"
+		"Install FusionPBX Base")
+            clear
+			bash ./install/fusionpbx.sh
+			echo "FusionPBX base installation complete"
+			read -s -p "Press any key to resume ..."
+            ;;
+        "Freeswitch Install Menu")
+            clear
+			bash ./install/freeswitch.sh
+            ;;
+		"Set Up Database")
+            clear
+			bash ./install/database.sh
+			echo "database setup complete complete"
+			read -s -p "Press any key to resume ..."
             ;;
         "Quit")
             break
