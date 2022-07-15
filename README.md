@@ -10,3 +10,4 @@ Run the follwing command on a clean installation of Debian Bullseye (system-tool
 ```sh
 wget -O - https://raw.githubusercontent.com/meanoldtreelv/fusionpbx-install/master/attended-install.sh | sh;
 ```
+Currently refactoring, do not deploy
