@@ -5,7 +5,7 @@ cd /usr/src/fusionpbx-install/
 clear
 echo "Node Build Menu"
 PS3='Please enter your choice: '
-options=("Edit config" "Docker Install & Join" "Install IPTables" "Option 3" "Quit")
+options=("Edit config" "Docker Install & Join" "Install IPTables" "Install FusionPBX Base" "Freeswitch Install Menu" "Set Up Database" "Install Database and set up users" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -52,6 +52,11 @@ do
 			bash ./install/database.sh
 			echo "database setup complete complete"
 			read -s -p "Press any key to resume ..."
+            ;;
+		"Install Database and set up users")
+            clear
+			bash ./install/build.sh
+			esac
             ;;
         "Quit")
             break
