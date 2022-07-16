@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /usr/src/fusionpbx-install/intall/config.sh
+source /usr/src/fusionpbx-install/install/config.sh
 
 echo "add the cache directory"
 mkdir -p /var/cache/fusionpbx
