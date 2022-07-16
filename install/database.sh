@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /usr/src/fusionpbx-install/intall/config.sh
+source /usr/src/fusionpbx-install/install/config.sh
 
 #create random passwords if flag is set
 if [ .$database_password = .'random' ]; then
