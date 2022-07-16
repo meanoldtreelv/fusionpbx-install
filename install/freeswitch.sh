@@ -53,7 +53,7 @@ do
 			;;
 		"Build SpanDSP")
 			clear
-            bash ./install/docker-install.shgit clone https://github.com/freeswitch/spandsp.git spandsp
+            git clone https://github.com/freeswitch/spandsp.git spandsp
 			cd spandsp
 			sh autogen.sh
 			./configure
@@ -85,7 +85,7 @@ do
 			echo ""
 			read -s -p "Press any key to resume ..."
 			#apply patch
-			patch -u /usr/src/freeswitch/src/mod/databases/mod_pgsql/mod_pgsql.c -i /usr/src/fusionpbx-install.sh/debian/resources
+			patch -u /usr/src/freeswitch/src/mod/databases/mod_pgsql/mod_pgsql.c -i /usr/src/fusionpbx-install/install/mod_pgsql.patch
 			#error check
 			echo ""
 			echo ""
