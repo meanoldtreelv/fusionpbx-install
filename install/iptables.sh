@@ -10,7 +10,8 @@ apt-get install -y iptables
 update-alternatives --set iptables /usr/sbin/iptables-legacy
 update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
 
-
+#lets add /usr/sbin to the path
+export PATH=/usr/sbin:$PATH
 
 #run iptables commands
 iptables -A INPUT -i lo -j ACCEPT
@@ -65,6 +66,9 @@ apt-get install -y iptables-persistent
 echo "Installing Fail2ban"
 apt-get install -y fail2ban
 
+#move to the correct directory
+cd /usr/src/fusionpbx-install/intall/
+
 #move the filters
 cp fail2ban/freeswitch.conf /etc/fail2ban/filter.d/freeswitch.conf
 cp fail2ban/freeswitch-acl.conf /etc/fail2ban/filter.d/freeswitch-acl.conf
@@ -80,4 +84,4 @@ cp fail2ban/nginx-dos.conf /etc/fail2ban/filter.d/nginx-dos.conf
 cp fail2ban/jail.local /etc/fail2ban/jail.local
 
 #restart fail2ban
-systemctl fail2ban restart
+systemctl restart fail2ban
