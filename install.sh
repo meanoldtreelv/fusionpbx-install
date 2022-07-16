@@ -13,4 +13,4 @@ apt-get install -y git lsb-release nano
 # cloning the repo so that we have things on disk
 cd /usr/src
 git clone https://github.com/meanoldtreelv/fusionpbx-install.git
-bash /usr/src/fusionpbx-install/installmenu.sh
+source /usr/src/fusionpbx-install/installmenu.sh
