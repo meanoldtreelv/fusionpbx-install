@@ -67,7 +67,7 @@ echo "Installing Fail2ban"
 apt-get install -y fail2ban
 
 #move to the correct directory
-cd /usr/src/fusionpbx-install/intall/
+cd /usr/src/fusionpbx-install/install/
 
 #move the filters
 cp fail2ban/freeswitch.conf /etc/fail2ban/filter.d/freeswitch.conf
