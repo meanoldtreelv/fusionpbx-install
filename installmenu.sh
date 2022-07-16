@@ -56,7 +56,7 @@ do
 		"Install Database and set up users")
             clear
 			bash ./install/build.sh
-			esac
+			break
             ;;
         "Quit")
             break
