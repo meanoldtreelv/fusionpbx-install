@@ -7,7 +7,7 @@ mkdir -p /var/cache/fusionpbx
 chown -R www-data:www-data /var/cache/fusionpbx
 
 echo "get the source code"
-git clone $branch https://github.com/fusionpbx/fusionpbx.git /var/www/fusionpbx
+git clone https://github.com/fusionpbx/fusionpbx.git /var/www/fusionpbx
 chown -R www-data:www-data /var/www/fusionpbx
 
 #PHP
@@ -43,11 +43,11 @@ systemctl restart php7.4-fpm
 echo "configuring the web server"
 
 #enable fusionpbx nginx config
+
 cp ./nginx/fusionpbx /etc/nginx/sites-available/fusionpbx
 
 #prepare socket name
 sed -i /etc/nginx/sites-available/fusionpbx -e 's#unix:.*;#unix:/var/run/php/php7.4-fpm.sock;#g'
-
 ln -s /etc/nginx/sites-available/fusionpbx /etc/nginx/sites-enabled/fusionpbx
 
 #self signed certificate
@@ -66,5 +66,5 @@ fi
 systemctl daemon-reload
 
 #restart nginx
-systemctl nginx restart
+systemctl restart nginx
 
