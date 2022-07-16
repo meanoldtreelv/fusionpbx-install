@@ -44,7 +44,7 @@ echo "configuring the web server"
 
 #enable fusionpbx nginx config
 
-cp ./nginx/fusionpbx /etc/nginx/sites-available/fusionpbx
+cp /usr/src/fusionpbx-install/install/nginx/fusionpbx /etc/nginx/sites-available/fusionpbx
 
 #prepare socket name
 sed -i /etc/nginx/sites-available/fusionpbx -e 's#unix:.*;#unix:/var/run/php/php7.4-fpm.sock;#g'
