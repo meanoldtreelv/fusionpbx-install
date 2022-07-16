@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /usr/src/fusionpbx-install/intsall/config.sh
+source /usr/src/fusionpbx-install/install/config.sh
 
 cd /usr/src
 echo "FreeSWITCH build menu"
