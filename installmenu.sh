@@ -5,7 +5,7 @@ cd /usr/src/fusionpbx-install/
 clear
 echo "Node Build Menu"
 PS3='Please enter your choice: '
-options=("Edit config" "Docker Install & Join" "Install IPTables" "Install FusionPBX Base" "Freeswitch Install Menu" "Set Up Database" "Install Database and set up users" "Quit")
+options=("Edit config" "Install All Dependencies" "Docker Install & Join" "Install IPTables" "Install FusionPBX Base" "Freeswitch Install Menu" "Set Up Database" "Install Database and set up users" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -24,34 +24,48 @@ do
 			echo ""
 			echo ""
 			read -s -p "Press any key to resume ..."
+			clear
+			echo ""
 			;;
 		"Docker Install & Join")
 			clear
             bash ./install/docker-install.sh
 			echo "iptables installation complete"
 			read -s -p "Press any key to resume ..."
+			clear
+			echo ""
+			clear
+			echo ""
             ;;
         "Install IPTables")
             clear
 			bash ./install/iptables.sh
 			echo "iptables installation complete"
 			read -s -p "Press any key to resume ..."
+			clear
+			echo ""
             ;;
 		"Install FusionPBX Base")
             clear
 			bash ./install/fusionpbx.sh
 			echo "FusionPBX base installation complete"
 			read -s -p "Press any key to resume ..."
+			clear
+			echo ""
             ;;
         "Freeswitch Install Menu")
             clear
 			bash ./install/freeswitch.sh
+			clear
+			echo ""
             ;;
 		"Set Up Database")
             clear
 			bash ./install/database.sh
 			echo "database setup complete complete"
 			read -s -p "Press any key to resume ..."
+			clear
+			echo ""
             ;;
 		"Install Database and set up users")
             clear
