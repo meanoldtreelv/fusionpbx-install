@@ -26,4 +26,4 @@ apt-get install -y libshout3-dev libmpg123-dev libmp3lame-dev yasm nasm libsndfi
 apt-get install -y libvpx6 swig4.0
 apt-get install -y sqlite3
 apt-get install -y cmake uuid-dev
-apt-get install -y read
+apt-get install -y python3.9-distutils
