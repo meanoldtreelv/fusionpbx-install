@@ -4,6 +4,8 @@
 #
 #clean up previous install attempts
 rm -rf /usr/src/fusionpbx-install
+#remove the cdrom from apt sources
+sed -i '/cdrom:/d' /etc/apt/sources.list
 #grab the base packages
 apt-get update
 apt-get upgrade
